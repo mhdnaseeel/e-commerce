@@ -19,6 +19,9 @@ public class UserDTO {
 	private String username;
 	private String email;
 	private String password;
+    private String avatar;
+    private String fullName;
+    private String phoneNumber;
 	private Set<Role> roles = new HashSet<>();
 	private AddressDTO address;
 	private CartDTO cart;

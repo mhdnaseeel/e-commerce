@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <linearGradient id="storeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <path fill="url(#storeGrad)" d="M21.9 7.42L19.34 3.7c-.36-.5-.94-.8-1.56-.8H6.22c-.62 0-1.2.3-1.56.8L2.1 7.42c-.2.27-.3.6-.3.94v1.88c0 1.25 1.02 2.27 2.27 2.27h.18V20c0 1.1.9 2 2 2h11.5c1.1 0 2-.9 2-2v-7.49h.18c1.25 0 2.27-1.02 2.27-2.27V8.36c0-.34-.1-.67-.3-.94zM16.25 20H7.75v-7.5H16.25V20zM3.45 7.5L5.59 4.54c.1-.15.28-.24.46-.24h11.9c.18 0 .36.09.46.24l2.14 2.96H3.45z"/>
+</svg>

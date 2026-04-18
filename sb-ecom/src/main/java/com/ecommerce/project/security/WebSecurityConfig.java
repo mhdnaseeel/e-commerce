@@ -153,6 +153,7 @@ public class WebSecurityConfig {
                         return categoryRepository.save(cat);
                     });
 
+            // Added categories
             Category fashion = categoryRepository.findByCategoryName("Fashion")
                     .orElseGet(() -> {
                         Category cat = new Category();
@@ -176,40 +177,28 @@ public class WebSecurityConfig {
 
 
             // Create users if not already present
-            if (!userRepository.existsByUserName("user1")) {
+            if (!userRepository.existsByUserNameIgnoreCase("user1")) {
                 User user1 = new User("user1", "user1@example.com", passwordEncoder.encode("password1"));
                 userRepository.save(user1);
             }
 
-            if (!userRepository.existsByUserName("seller1")) {
+            if (!userRepository.existsByUserNameIgnoreCase("seller1")) {
                 User seller1 = new User("seller1", "seller1@example.com", passwordEncoder.encode("password2"));
                 userRepository.save(seller1);
             }
 
-            if (!userRepository.existsByUserName("admin")) {
+            if (!userRepository.existsByUserNameIgnoreCase("admin")) {
                 User admin = new User("admin", "admin@example.com", passwordEncoder.encode("admin123"));
                 admin.setRoles(adminRoles);
-                User savedAdmin = userRepository.save(admin);
+                userRepository.save(admin);
 
                 // Add address for admin
                 Address address = new Address("123 Tech Lane", "Innovation Park", "Silicon Valley", "California", "USA", "94025");
-                address.setUser(savedAdmin);
+                address.setUser(admin);
                 addressRepository.save(address);
-            } else {
-                userRepository.findByUserName("admin").ifPresent(adminUser -> {
-                    adminUser.setPassword(passwordEncoder.encode("admin123"));
-                    adminUser.setRoles(adminRoles);
-                    userRepository.save(adminUser);
-
-                    if (addressRepository.findByUser(adminUser).isEmpty()) {
-                        Address address = new Address("123 Tech Lane", "Innovation Park", "Silicon Valley", "California", "USA", "94025");
-                        address.setUser(adminUser);
-                        addressRepository.save(address);
-                    }
-                });
             }
             // Seed Products if empty
-            User seller = userRepository.findByUserName("seller1").orElse(null);
+            User seller = userRepository.findByUserNameIgnoreCase("seller1").orElse(null);
 
             if (seller != null) {
                 // Previous products (check if exist or just add new)

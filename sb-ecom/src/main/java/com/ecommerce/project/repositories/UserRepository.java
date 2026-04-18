@@ -16,9 +16,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUserName(String username);
 
-    Boolean existsByUserName(String username);
+    Optional<User> findByUserNameIgnoreCase(String username);
 
-    Boolean existsByEmail(String email);
+    Boolean existsByUserNameIgnoreCase(String username);
+
+    Boolean existsByEmailIgnoreCase(String email);
 
     @Query("SELECT u FROM User u JOIN u.roles r WHERE r.roleName = :role")
     Page<User> findByRoleName(@Param("role") AppRole role, Pageable pageable);

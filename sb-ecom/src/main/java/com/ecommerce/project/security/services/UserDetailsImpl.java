@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +16,8 @@ import com.ecommerce.project.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
@@ -25,17 +27,27 @@ public class UserDetailsImpl implements UserDetails {
 
     private String email;
 
+    private String avatar;
+
+    private String fullName;
+
+    private String phoneNumber;
+
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String email, String password,
+    public UserDetailsImpl(Long id, String username, String email, String password, String avatar,
+                           String fullName, String phoneNumber,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.avatar = avatar;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
         this.authorities = authorities;
     }
 
@@ -49,6 +61,9 @@ public class UserDetailsImpl implements UserDetails {
                 user.getUserName(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getAvatar(),
+                user.getFullName(),
+                user.getPhoneNumber(),
                 authorities);
     }
 
@@ -63,6 +78,10 @@ public class UserDetailsImpl implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 
     @Override

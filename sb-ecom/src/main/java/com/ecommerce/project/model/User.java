@@ -42,6 +42,15 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "avatar")
+    private String avatar;
+
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     public User(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;

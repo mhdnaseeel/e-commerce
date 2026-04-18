@@ -10,9 +10,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class AddressServiceImpl implements AddressService{
     @Autowired
     private AddressRepository addressRepository;
@@ -31,6 +33,7 @@ public class AddressServiceImpl implements AddressService{
         addressesList.add(address);
         user.setAddresses(addressesList);
         Address savedAddress = addressRepository.save(address);
+        userRepository.save(user);
         return modelMapper.map(savedAddress, AddressDTO.class);
     }
 

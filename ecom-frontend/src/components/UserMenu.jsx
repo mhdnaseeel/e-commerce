@@ -14,6 +14,7 @@ const UserMenu = () => {
     const { user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_BACK_END_URL;
 
     const isAdmin = user && user?.roles.includes("ROLE_ADMIN");
     const isSeller = user && user?.roles.includes("ROLE_SELLER");
@@ -35,7 +36,11 @@ const UserMenu = () => {
         className='sm:border sm:border-slate-400 flex flex-row items-center gap-1 rounded-full cursor-pointer hover:shadow-md transition text-slate-700'
           onClick={handleClick}
         >
-          <Avatar alt='Menu' src=''/>
+          <Avatar 
+            alt={user?.username || 'User'} 
+            src={user?.avatar?.startsWith('http') ? user.avatar : (user?.avatar ? `${API_URL}/images/${user.avatar}` : '')}
+            sx={{ width: 32, height: 32, border: '1px solid #e2e8f0' }}
+          />
         </div>
         <Menu
           sx={{ width:"400px" }}

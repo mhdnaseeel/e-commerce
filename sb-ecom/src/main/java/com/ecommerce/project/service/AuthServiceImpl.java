@@ -28,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.beans.factory.annotation.Value;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +56,9 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     ModelMapper modelMapper;
 
+    @Value("${image.base.url}")
+    private String imageBaseUrl;
+
     @Override
     public AuthenticationResult login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager
@@ -71,18 +75,21 @@ public class AuthServiceImpl implements AuthService {
                 .collect(Collectors.toList());
 
         UserInfoResponse response = new UserInfoResponse(userDetails.getId(),
-                userDetails.getUsername(), roles, userDetails.getEmail(), jwtCookie.toString());
-
+                userDetails.getUsername(), roles, userDetails.getEmail(), jwtCookie.toString(),
+                constructImageUrl(userDetails.getAvatar()),
+                userDetails.getFullName(),
+                userDetails.getPhoneNumber()
+        );
         return new AuthenticationResult(response, jwtCookie);
     }
 
     @Override
     public ResponseEntity<MessageResponse> register(SignupRequest signUpRequest) {
-        if (userRepository.existsByUserName(signUpRequest.getUsername())) {
+        if (userRepository.existsByUserNameIgnoreCase(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
         }
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (userRepository.existsByEmailIgnoreCase(signUpRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
 
@@ -135,9 +142,19 @@ public class AuthServiceImpl implements AuthService {
                 .collect(Collectors.toList());
 
         UserInfoResponse response = new UserInfoResponse(userDetails.getId(),
-                userDetails.getUsername(), roles);
-
+                userDetails.getUsername(), roles, userDetails.getEmail(), null,
+                constructImageUrl(userDetails.getAvatar()),
+                userDetails.getFullName(),
+                userDetails.getPhoneNumber()
+        );
         return response;
+    }
+
+    private String constructImageUrl(String imageName) {
+        if (imageName == null || imageName.isEmpty() || imageName.startsWith("http")) {
+            return imageName;
+        }
+        return imageBaseUrl.endsWith("/") ? imageBaseUrl + imageName : imageBaseUrl + "/" + imageName;
     }
 
     @Override
