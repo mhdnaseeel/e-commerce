@@ -361,3 +361,67 @@ export const sellerTableColumns = [
     },
   },
 ];
+
+export const deactivationTableColumns = (handleAction) => [
+  {
+    disableColumnMenu: true,
+    field: "id",
+    headerName: "User ID",
+    minWidth: 100,
+    headerAlign: "center",
+    align: "center",
+    editable: false,
+    headerClassName: "text-black font-semibold border",
+    cellClassName: "text-slate-700 font-normal border",
+  },
+  {
+    disableColumnMenu: true,
+    field: "username",
+    headerName: "Username",
+    width: 200,
+    headerAlign: "center",
+    align: "center",
+    editable: false,
+    headerClassName: "text-black font-semibold border",
+    cellClassName: "text-slate-700 font-normal border",
+  },
+  {
+    disableColumnMenu: true,
+    field: "email",
+    headerName: "Email",
+    width: 250,
+    headerAlign: "center",
+    align: "center",
+    editable: false,
+    headerClassName: "text-black font-semibold border",
+    cellClassName: "text-slate-700 font-normal border",
+  },
+  {
+    field: "action",
+    headerName: "Action",
+    headerAlign: "center",
+    editable: false,
+    headerClassName: "text-black font-semibold text-center",
+    cellClassName: "text-slate-700 font-normal",
+    sortable: false,
+    width: 300,
+    renderCell: (params) => {
+      return (
+        <div className="flex justify-center items-center space-x-2 h-full pt-1">
+          <button
+            onClick={() => handleAction(params.row.id, true)}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-md font-medium transition"
+          >
+            Approve
+          </button>
+          <button
+            onClick={() => handleAction(params.row.id, false)}
+            className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1.5 rounded-md font-medium transition"
+          >
+            Reject
+          </button>
+        </div>
+      );
+    },
+  },
+];

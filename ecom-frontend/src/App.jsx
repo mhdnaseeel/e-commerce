@@ -21,6 +21,7 @@ import Category from './components/admin/categories/Category'
 import Orders from './components/admin/orders/Orders'
 import Profile from './components/profile/Profile'
 import UserOrders from './components/profile/UserOrders'
+import UserManagement from './components/admin/UserManagement'
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
               <Route path='sellers' element={<Sellers />} />
               <Route path='orders' element={<Orders />} />
               <Route path='categories' element={<Category />} />
+              <Route path='users' element={<UserManagement />} />
             </Route>
           </Route>
         </Routes>

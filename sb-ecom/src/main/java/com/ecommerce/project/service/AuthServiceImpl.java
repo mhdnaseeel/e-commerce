@@ -78,7 +78,12 @@ public class AuthServiceImpl implements AuthService {
                 userDetails.getUsername(), roles, userDetails.getEmail(), jwtCookie.toString(),
                 constructImageUrl(userDetails.getAvatar()),
                 userDetails.getFullName(),
-                userDetails.getPhoneNumber()
+                userDetails.getPhoneNumber(),
+                userDetails.isMarketingEmails(),
+                userDetails.isOrderUpdateEmails(),
+                userDetails.isPromotionalEmails(),
+                userDetails.isDeactivationRequested(),
+                userDetails.isEnabled()
         );
         return new AuthenticationResult(response, jwtCookie);
     }
@@ -145,7 +150,12 @@ public class AuthServiceImpl implements AuthService {
                 userDetails.getUsername(), roles, userDetails.getEmail(), null,
                 constructImageUrl(userDetails.getAvatar()),
                 userDetails.getFullName(),
-                userDetails.getPhoneNumber()
+                userDetails.getPhoneNumber(),
+                userDetails.isMarketingEmails(),
+                userDetails.isOrderUpdateEmails(),
+                userDetails.isPromotionalEmails(),
+                userDetails.isDeactivationRequested(),
+                userDetails.isEnabled()
         );
         return response;
     }

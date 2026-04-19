@@ -51,6 +51,21 @@ public class User {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "marketing_emails")
+    private Boolean marketingEmails = true;
+
+    @Column(name = "order_update_emails")
+    private Boolean orderUpdateEmails = true;
+
+    @Column(name = "promotional_emails")
+    private Boolean promotionalEmails = true;
+
+    @Column(name = "deactivation_requested")
+    private Boolean deactivationRequested = false;
+
+    @Column(name = "enabled")
+    private Boolean enabled = true;
+
     public User(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;
@@ -59,8 +74,7 @@ public class User {
 
     @Setter
     @Getter
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-                fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
                 joinColumns = @JoinColumn(name = "user_id"),
                 inverseJoinColumns = @JoinColumn(name = "role_id"))

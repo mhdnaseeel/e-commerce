@@ -179,7 +179,12 @@ export const addUpdateUserAddress =
         dispatch({ type:"IS_SUCCESS" });
     } catch (error) {
         console.log(error);
-        toast.error(error?.response?.data?.message || "Internal Server Error");
+        if (error?.response?.data && typeof error.response.data === 'object' && !error.response.data.message) {
+            const errorMessages = Object.values(error.response.data).join(", ");
+            toast.error(errorMessages || "Validation Failed");
+        } else {
+            toast.error(error?.response?.data?.message || "Internal Server Error");
+        }
         dispatch({ type:"IS_ERROR", payload: null });
     } finally {
         setOpenAddressModal(false);

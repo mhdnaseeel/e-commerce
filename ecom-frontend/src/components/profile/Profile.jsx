@@ -3,6 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { FaUser, FaEnvelope, FaShieldAlt, FaMapMarkerAlt, FaPlus, FaEdit, FaCamera } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
+import AddressInfoModal from '../checkout/AddressInfoModal';
+import AddAddressForm from '../checkout/AddAddressForm';
+import ChangePasswordModal from './ChangePasswordModal';
+import EmailPreferencesModal from './EmailPreferencesModal';
 
 const Profile = () => {
     const { user } = useSelector((state) => state.auth);
@@ -15,6 +19,10 @@ const Profile = () => {
     const [editData, setEditData] = useState({ username: '', email: '', fullName: '', phoneNumber: '' });
     const [avatarPreview, setAvatarPreview] = useState(null);
     const fileInputRef = useRef(null);
+    const [openAddressModal, setOpenAddressModal] = useState(false);
+    const [selectedAddress, setSelectedAddress] = useState(null);
+    const [openChangePasswordModal, setOpenChangePasswordModal] = useState(false);
+    const [openEmailModal, setOpenEmailModal] = useState(false);
 
     useEffect(() => {
         const fetchAddresses = async () => {
@@ -40,7 +48,7 @@ const Profile = () => {
                 phoneNumber: user.phoneNumber || ''
             });
         }
-    }, [user, API_URL]);
+    }, [user, API_URL, openAddressModal]);
 
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
@@ -103,6 +111,22 @@ const Profile = () => {
         }
     };
 
+    const handleDeactivationRequest = async () => {
+        if (!window.confirm("Are you sure you want to request account deactivation? This action requires admin approval.")) return;
+        
+        try {
+            const res = await axios.post(`${API_URL}/api/users/deactivate/request`, {}, {
+                withCredentials: true
+            });
+            const updatedUser = { ...user, deactivationRequested: true };
+            dispatch({ type: "LOGIN_USER", payload: updatedUser });
+            localStorage.setItem("auth", JSON.stringify(updatedUser));
+            toast.success(res.data.message);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to submit request");
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 relative">
             <div className="max-w-4xl mx-auto">
@@ -161,11 +185,14 @@ const Profile = () => {
                                 </div>
                             </div>
                             <div className="flex gap-2">
-                                {user?.roles?.map((role, idx) => (
+                                {user?.roles?.map((role, idx) => {
+                                    const roleName = typeof role === 'string' ? role : role.roleName;
+                                    return (
                                     <span key={idx} className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-semibold flex items-center capitalize">
-                                        <FaShieldAlt className="mr-1" /> {role.replace('ROLE_', '').toLowerCase()}
+                                        <FaShieldAlt className="mr-1" /> {roleName?.replace('ROLE_', '').toLowerCase()}
                                     </span>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
@@ -179,7 +206,7 @@ const Profile = () => {
                                     <FaMapMarkerAlt className="mr-2 text-purple-600" /> Saved Addresses
                                 </h2>
                                 <button 
-                                    onClick={() => toast("Address management redirection...", { icon: '📍' })}
+                                    onClick={() => { setSelectedAddress(null); setOpenAddressModal(true); }}
                                     className="text-sm bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition duration-300 flex items-center"
                                 >
                                     <FaPlus className="mr-2" /> Add New
@@ -214,15 +241,21 @@ const Profile = () => {
                          <div className="bg-white rounded-2xl shadow-lg p-6">
                             <h2 className="text-xl font-bold text-gray-800 mb-6">Account Settings</h2>
                             <div className="space-y-4">
-                                <button className="w-full text-left px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-700 font-medium transition">
+                                <button onClick={() => setOpenChangePasswordModal(true)} className="w-full text-left px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-700 font-medium transition active:bg-gray-100">
                                     Change Password
                                 </button>
-                                <button className="w-full text-left px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-700 font-medium transition">
+                                <button onClick={() => setOpenEmailModal(true)} className="w-full text-left px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-700 font-medium transition active:bg-gray-100">
                                     Email Preferences
                                 </button>
-                                <button className="w-full text-left px-4 py-3 rounded-xl hover:bg-red-50 text-red-600 font-medium transition">
-                                    Deactivate Account
-                                </button>
+                                {user?.deactivationRequested ? (
+                                    <button disabled className="w-full text-left px-4 py-3 rounded-xl bg-orange-50 text-orange-600 font-medium transition cursor-not-allowed opacity-80 border border-orange-100">
+                                        Deactivation Pending Approval
+                                    </button>
+                                ) : (
+                                    <button onClick={handleDeactivationRequest} className="w-full text-left px-4 py-3 rounded-xl hover:bg-red-50 text-red-600 font-medium transition active:bg-red-100">
+                                        Deactivate Account
+                                    </button>
+                                )}
                             </div>
                          </div>
                     </div>
@@ -260,6 +293,13 @@ const Profile = () => {
                     </div>
                 </div>
             )}
+
+            <AddressInfoModal open={openAddressModal} setOpen={setOpenAddressModal}>
+                <AddAddressForm address={selectedAddress} setOpenAddressModal={setOpenAddressModal} />
+            </AddressInfoModal>
+
+            <ChangePasswordModal open={openChangePasswordModal} setOpen={setOpenChangePasswordModal} />
+            <EmailPreferencesModal open={openEmailModal} setOpen={setOpenEmailModal} />
         </div>
     );
 };

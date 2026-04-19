@@ -27,4 +27,16 @@ public class UserController {
         UserDTO updatedUser = userService.updateProfileImage(image);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
+
+    @PutMapping("/password")
+    public ResponseEntity<com.ecommerce.project.payload.APIResponse> updatePassword(@jakarta.validation.Valid @RequestBody com.ecommerce.project.payload.PasswordUpdateDTO passwordUpdateDTO) {
+        String status = userService.updatePassword(passwordUpdateDTO);
+        return new ResponseEntity<>(new com.ecommerce.project.payload.APIResponse(status, true), HttpStatus.OK);
+    }
+
+    @PostMapping("/deactivate/request")
+    public ResponseEntity<com.ecommerce.project.payload.APIResponse> requestDeactivation() {
+        String status = userService.requestDeactivation();
+        return new ResponseEntity<>(new com.ecommerce.project.payload.APIResponse(status, true), HttpStatus.OK);
+    }
 }

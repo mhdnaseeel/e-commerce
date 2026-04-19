@@ -22,6 +22,11 @@ public class UserDTO {
     private String avatar;
     private String fullName;
     private String phoneNumber;
+    private boolean marketingEmails;
+    private boolean orderUpdateEmails;
+    private boolean promotionalEmails;
+    private boolean deactivationRequested;
+    private boolean enabled;
 	private Set<Role> roles = new HashSet<>();
 	private AddressDTO address;
 	private CartDTO cart;

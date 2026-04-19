@@ -30,8 +30,12 @@ public class UserDetailsImpl implements UserDetails {
     private String avatar;
 
     private String fullName;
-
     private String phoneNumber;
+    private boolean marketingEmails;
+    private boolean orderUpdateEmails;
+    private boolean promotionalEmails;
+    private boolean deactivationRequested;
+    private boolean enabled;
 
     @JsonIgnore
     private String password;
@@ -40,6 +44,9 @@ public class UserDetailsImpl implements UserDetails {
 
     public UserDetailsImpl(Long id, String username, String email, String password, String avatar,
                            String fullName, String phoneNumber,
+                           boolean marketingEmails, boolean orderUpdateEmails, boolean promotionalEmails,
+                           boolean deactivationRequested,
+                           boolean enabled,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
@@ -48,6 +55,11 @@ public class UserDetailsImpl implements UserDetails {
         this.avatar = avatar;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
+        this.marketingEmails = marketingEmails;
+        this.orderUpdateEmails = orderUpdateEmails;
+        this.promotionalEmails = promotionalEmails;
+        this.deactivationRequested = deactivationRequested;
+        this.enabled = enabled;
         this.authorities = authorities;
     }
 
@@ -64,6 +76,11 @@ public class UserDetailsImpl implements UserDetails {
                 user.getAvatar(),
                 user.getFullName(),
                 user.getPhoneNumber(),
+                user.getMarketingEmails() != null ? user.getMarketingEmails() : true,
+                user.getOrderUpdateEmails() != null ? user.getOrderUpdateEmails() : true,
+                user.getPromotionalEmails() != null ? user.getPromotionalEmails() : true,
+                user.getDeactivationRequested() != null ? user.getDeactivationRequested() : false,
+                user.getEnabled() != null ? user.getEnabled() : true,
                 authorities);
     }
 
@@ -111,7 +128,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     @Override
