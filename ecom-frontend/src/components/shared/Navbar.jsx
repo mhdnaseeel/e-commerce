@@ -25,7 +25,7 @@ const Navbar = () => {
             navbarOpen ? "h-fit sm:pb-0 pb-5" : "h-0 overflow-hidden"
           }  transition-all duration-100 sm:h-fit sm:bg-none bg-custom-gradient   text-white sm:w-fit w-full sm:flex-row flex-col px-4 sm:px-0`}>
                 <li className="font-medium transition-all duration-150">
-                   <Link className={`${
+                   <Link onClick={() => setNavbarOpen(false)} className={`${
                     path === "/" ? "text-white font-semibold" : "text-gray-200"
                    }`}
                     to="/">
@@ -34,7 +34,7 @@ const Navbar = () => {
                 </li>
 
                 <li className="font-medium transition-all duration-150">
-                   <Link className={`${
+                   <Link onClick={() => setNavbarOpen(false)} className={`${
                     path === "/products" ? "text-white font-semibold" : "text-gray-200"
                    }`}
                     to="/products">
@@ -44,7 +44,7 @@ const Navbar = () => {
 
 
                 <li className="font-medium transition-all duration-150">
-                   <Link className={`${
+                   <Link onClick={() => setNavbarOpen(false)} className={`${
                     path === "/about" ? "text-white font-semibold" : "text-gray-200"
                    }`}
                     to="/about">
@@ -53,7 +53,7 @@ const Navbar = () => {
                 </li>
 
                 <li className="font-medium transition-all duration-150">
-                   <Link className={`${
+                   <Link onClick={() => setNavbarOpen(false)} className={`${
                     path === "/contact" ? "text-white font-semibold" : "text-gray-200"
                    }`}
                     to="/contact">
@@ -62,7 +62,7 @@ const Navbar = () => {
                 </li>
 
                 <li className="font-medium transition-all duration-150">
-                   <Link className={`${
+                   <Link onClick={() => setNavbarOpen(false)} className={`${
                     path === "/cart" ? "text-white font-semibold" : "text-gray-200"
                    }`}
                     to="/cart">
@@ -79,11 +79,11 @@ const Navbar = () => {
 
                 {(user && user.id) ? (
                     <li className="font-medium transition-all duration-150">
-                        <UserMenu />
+                        <UserMenu closeMenu={() => setNavbarOpen(false)} />
                     </li>
                 ) : (
                 <li className="font-medium transition-all duration-150">
-                   <Link className="flex items-center space-x-2 px-4 py-[6px] 
+                   <Link onClick={() => setNavbarOpen(false)} className="flex items-center space-x-2 px-4 py-[6px] 
                             bg-linear-to-r from-purple-600 to-red-500 
                             text-white font-semibold rounded-md shadow-lg 
                             hover:from-purple-500 hover:to-red-400 transition 

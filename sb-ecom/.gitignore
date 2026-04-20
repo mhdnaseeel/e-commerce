@@ -14,7 +14,10 @@ target/
 .sts4-cache
 
 # Ignore the images folder
-images/
+images/*
+!images/*.jpg
+!images/*.png
+!images/*.jpeg
 
 
 ### IntelliJ IDEA ###

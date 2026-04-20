@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import BackDrop from './BackDrop';
 import { logOutUser } from '../store/actions';
 
-const UserMenu = () => {
+const UserMenu = ({ closeMenu }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const { user } = useSelector((state) => state.auth);
@@ -24,10 +24,12 @@ const UserMenu = () => {
     };
     const handleClose = () => {
       setAnchorEl(null);
+      if (closeMenu) closeMenu();
     };
 
     const logOutHandler = () => {
         dispatch(logOutUser(navigate));
+        if (closeMenu) closeMenu();
       };
   
     return (
