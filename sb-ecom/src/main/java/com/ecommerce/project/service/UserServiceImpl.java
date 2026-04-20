@@ -79,7 +79,10 @@ public class UserServiceImpl implements UserService {
     private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     private String constructImageUrl(String imageName) {
-        return imageBaseUrl.endsWith("/") ? imageBaseUrl + imageName : imageBaseUrl + "/" + imageName;
+        if (imageName != null && imageName.contains("localhost:8082/images/")) {
+            return imageName.substring(imageName.lastIndexOf("/") + 1);
+        }
+        return imageName;
     }
 
     @Override

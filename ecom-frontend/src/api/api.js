@@ -5,13 +5,34 @@ const api = axios.create({
     withCredentials: true,
 });
 
+api.interceptors.request.use(
+    (config) => {
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        if (auth && auth.jwtToken) {
+            config.headers.Authorization = `Bearer ${auth.jwtToken}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response && error.response.status === 401) {
-            // Token is invalid or expired
-            localStorage.removeItem("auth");
-            window.location.href = "/login";
+        const { response, config } = error;
+        if (response && response.status === 401) {
+            const url = config?.url || "";
+            // Never clear auth for public, login, or payment-related requests
+            const isProtectedFromLogout =
+                url.includes("/public/") ||
+                url.includes("/auth/signin") ||
+                url.includes("/stripe") ||
+                url.includes("/paypal") ||
+                url.includes("/order/");
+
+            if (!isProtectedFromLogout) {
+                localStorage.removeItem("auth");
+            }
         }
         return Promise.reject(error);
     }

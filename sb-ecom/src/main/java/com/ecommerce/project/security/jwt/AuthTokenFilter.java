@@ -32,8 +32,20 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         logger.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
         try {
-            String jwt = parseJwt(request);
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+            String jwt = null;
+            // Prioritize JWT from Header for SPA reliability
+            String jwtFromHeader = jwtUtils.getJwtFromHeader(request);
+            if (jwtFromHeader != null && jwtUtils.validateJwtToken(jwtFromHeader)) {
+                jwt = jwtFromHeader;
+            } else {
+                // Fallback to Cookie if Header is not present or invalid
+                String jwtFromCookie = jwtUtils.getJwtFromCookies(request);
+                if (jwtFromCookie != null && jwtUtils.validateJwtToken(jwtFromCookie)) {
+                    jwt = jwtFromCookie;
+                }
+            }
+
+            if (jwt != null) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -53,26 +65,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-//    private String parseJwt(HttpServletRequest request) {
-//        String jwt = jwtUtils.getJwtFromCookies(request);
-//        logger.debug("AuthTokenFilter.java: {}", jwt);
-//        return jwt;
-//    }
-
-    private String parseJwt(HttpServletRequest request) {
-        String jwtFromCookie = jwtUtils.getJwtFromCookies(request);
-        if (jwtFromCookie != null) {
-            return jwtFromCookie;
-        }
-
-        String jwtFromHeader = jwtUtils.getJwtFromHeader(request);
-        if (jwtFromHeader != null) {
-            return jwtFromHeader;
-        }
-
-        return null;
     }
 }
 

@@ -16,10 +16,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        // Remove trailing slash from frontEndUrl if present, as CORS origin matching is exact
+        String cleanFrontEndUrl = frontEndUrl.endsWith("/")
+                ? frontEndUrl.substring(0, frontEndUrl.length() - 1)
+                : frontEndUrl;
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", frontEndUrl)
+                .allowedOrigins("http://localhost:3000", "http://localhost:5173", cleanFrontEndUrl)
                 .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
                 .allowedHeaders("*")
+                .exposedHeaders("Set-Cookie")
                 .allowCredentials(true);
     }
 

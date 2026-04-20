@@ -27,6 +27,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.ecommerce.project.security.jwt.AuthEntryPointJwt;
 import com.ecommerce.project.security.jwt.AuthTokenFilter;
@@ -36,7 +39,7 @@ import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
-//@EnableMethodSecurity
+// @EnableMethodSecurity
 public class WebSecurityConfig {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -49,7 +52,6 @@ public class WebSecurityConfig {
         return new AuthTokenFilter();
     }
 
-
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -59,7 +61,6 @@ public class WebSecurityConfig {
 
         return authProvider;
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
@@ -71,28 +72,25 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-                .cors(cors -> {})
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/v3/api-docs/**").permitAll()
-                                .requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/api/seller/**").hasAnyRole("ADMIN","SELLER")
-                                //.requestMatchers("/api/admin/**").permitAll()
-                                .requestMatchers("/api/public/**").permitAll()
-                                .requestMatchers("/swagger-ui/**").permitAll()
-                                .requestMatchers("/api/test/**").permitAll()
-                                .requestMatchers("/images/**").permitAll()
-                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                .anyRequest().authenticated()
-                );
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/seller/**").hasAnyRole("ADMIN", "SELLER")
+                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/api/order/stripe-client-secret").permitAll()
+                        .requestMatchers("/api/paypal/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/api/test/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
 
@@ -101,6 +99,21 @@ public class WebSecurityConfig {
                 frameOptions -> frameOptions.sameOrigin()));
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.addExposedHeader("Set-Cookie");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
@@ -113,14 +126,13 @@ public class WebSecurityConfig {
                 "/webjars/**"));
     }
 
-
     @Bean
     public CommandLineRunner initData(RoleRepository roleRepository,
-                                      UserRepository userRepository,
-                                      CategoryRepository categoryRepository,
-                                      ProductRepository productRepository,
-                                      AddressRepository addressRepository,
-                                      PasswordEncoder passwordEncoder) {
+            UserRepository userRepository,
+            CategoryRepository categoryRepository,
+            ProductRepository productRepository,
+            AddressRepository addressRepository,
+            PasswordEncoder passwordEncoder) {
         return args -> {
             // Retrieve or create roles
             Role userRole = roleRepository.findByRoleName(AppRole.ROLE_USER)
@@ -175,7 +187,6 @@ public class WebSecurityConfig {
                         return categoryRepository.save(cat);
                     });
 
-
             // Create users if not already present
             if (!userRepository.existsByUserNameIgnoreCase("user1")) {
                 User user1 = new User("user1", "user1@example.com", passwordEncoder.encode("password1"));
@@ -193,7 +204,8 @@ public class WebSecurityConfig {
                 userRepository.save(admin);
 
                 // Add address for admin
-                Address address = new Address("123 Tech Lane", "Innovation Park", "Silicon Valley", "California", "USA", "94025");
+                Address address = new Address("123 Tech Lane", "Innovation Park", "Silicon Valley", "California", "USA",
+                        "94025");
                 address.setUser(admin);
                 addressRepository.save(address);
             }
@@ -256,25 +268,46 @@ public class WebSecurityConfig {
 
                 // Ensure all products have the correct high-quality photos
                 productRepository.findByProductName("Smart Phone").ifPresent(p -> {
-                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) { p.setImage("smartphone.jpg"); productRepository.save(p); }
+                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) {
+                        p.setImage("smartphone.jpg");
+                        productRepository.save(p);
+                    }
                 });
                 productRepository.findByProductName("Laptop Pro").ifPresent(p -> {
-                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) { p.setImage("laptop.jpg"); productRepository.save(p); }
+                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) {
+                        p.setImage("laptop.jpg");
+                        productRepository.save(p);
+                    }
                 });
                 productRepository.findByProductName("Cool T-Shirt").ifPresent(p -> {
-                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) { p.setImage("tshirt.jpg"); productRepository.save(p); }
+                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) {
+                        p.setImage("tshirt.jpg");
+                        productRepository.save(p);
+                    }
                 });
                 productRepository.findByProductName("Canvas Shoes").ifPresent(p -> {
-                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) { p.setImage("shoes.jpg"); productRepository.save(p); }
+                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) {
+                        p.setImage("shoes.jpg");
+                        productRepository.save(p);
+                    }
                 });
                 productRepository.findByProductName("Java Programming").ifPresent(p -> {
-                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) { p.setImage("book.jpg"); productRepository.save(p); }
+                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) {
+                        p.setImage("book.jpg");
+                        productRepository.save(p);
+                    }
                 });
                 productRepository.findByProductName("Gaming Keyboard").ifPresent(p -> {
-                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) { p.setImage("keyboard.jpg"); productRepository.save(p); }
+                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) {
+                        p.setImage("keyboard.jpg");
+                        productRepository.save(p);
+                    }
                 });
                 productRepository.findByProductName("Smart Watch").ifPresent(p -> {
-                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) { p.setImage("watch.jpg"); productRepository.save(p); }
+                    if (p.getImage().equals("default.png") || p.getImage().isEmpty()) {
+                        p.setImage("watch.jpg");
+                        productRepository.save(p);
+                    }
                 });
             }
         };

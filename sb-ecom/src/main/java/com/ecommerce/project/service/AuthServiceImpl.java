@@ -69,13 +69,15 @@ public class AuthServiceImpl implements AuthService {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+        // Generate raw JWT token for the response body (used by frontend Authorization header)
+        String rawJwtToken = jwtUtils.generateTokenFromUsername(userDetails.getUsername());
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
         UserInfoResponse response = new UserInfoResponse(userDetails.getId(),
-                userDetails.getUsername(), roles, userDetails.getEmail(), jwtCookie.toString(),
+                userDetails.getUsername(), roles, userDetails.getEmail(), rawJwtToken,
                 constructImageUrl(userDetails.getAvatar()),
                 userDetails.getFullName(),
                 userDetails.getPhoneNumber(),
@@ -161,10 +163,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private String constructImageUrl(String imageName) {
-        if (imageName == null || imageName.isEmpty() || imageName.startsWith("http")) {
-            return imageName;
-        }
-        return imageBaseUrl.endsWith("/") ? imageBaseUrl + imageName : imageBaseUrl + "/" + imageName;
+        return imageName;
     }
 
     @Override

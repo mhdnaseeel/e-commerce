@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import api from "../../api/api"
 
 export const fetchProducts = (queryString) => async (dispatch) => {
@@ -299,6 +300,7 @@ export const createStripePaymentSecret
               dispatch({ type: "IS_SUCCESS" });
         } catch (error) {
             console.log(error);
+            dispatch({ type: "IS_ERROR", payload: error?.response?.data?.message || "Failed to create client secret" });
             toast.error(error?.response?.data?.message || "Failed to create client secret");
         }
 };
@@ -440,8 +442,8 @@ export const addNewProductFromDashboard =
             setOpen(false);
             await dispatch(dashboardProductsAction());
         } catch (error) {
-            console.error(err);
-            toast.error(err?.response?.data?.description || "Product creation failed");
+            console.error(error);
+            toast.error(error?.response?.data?.description || "Product creation failed");
         } finally {
             setLoader(false);
         }
@@ -569,12 +571,12 @@ export const deleteCategoryDashboardAction =
       toast.success("Category Delete Successful");
       setOpen(false);
       await dispatch(getAllCategoriesDashboard());
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.response?.data?.message || "Failed to delete category");
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Failed to delete category");
       dispatch({
         type: "IS_ERROR",
-        payload: err?.response?.data?.message || "Internal Server Error",
+        payload: error?.response?.data?.message || "Internal Server Error",
       });
     }
   };
