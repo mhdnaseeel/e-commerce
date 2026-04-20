@@ -101,11 +101,21 @@ public class WebSecurityConfig {
         return http.build();
     }
 
+    @Value("${frontend.url}")
+    private String frontEndUrl;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedOrigin("http://localhost:3000");
+        // Add production frontend URL (strip trailing slash for exact origin match)
+        String cleanUrl = frontEndUrl.endsWith("/")
+                ? frontEndUrl.substring(0, frontEndUrl.length() - 1)
+                : frontEndUrl;
+        if (!cleanUrl.contains("localhost")) {
+            configuration.addAllowedOrigin(cleanUrl);
+        }
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("Set-Cookie");
