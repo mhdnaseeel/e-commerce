@@ -27,6 +27,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String path = Paths.get("images").toAbsolutePath().toUri().toString();
         registry.addResourceHandler("/images/**")
-                .addResourceLocations(path);
+                .addResourceLocations(path, "classpath:/static/images/");
     }
 }
