@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
+import api from '../../api/api';
 import { FaUser, FaEnvelope, FaShieldAlt, FaMapMarkerAlt, FaPlus, FaEdit, FaCamera } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import AddressInfoModal from '../checkout/AddressInfoModal';
@@ -13,7 +13,6 @@ const Profile = () => {
     const dispatch = useDispatch();
     const [addresses, setAddresses] = useState([]);
     const [loading, setLoading] = useState(true);
-    const API_URL = import.meta.env.VITE_BACK_END_URL;
 
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({ username: '', email: '', fullName: '', phoneNumber: '' });
@@ -27,9 +26,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchAddresses = async () => {
             try {
-                const response = await axios.get(`${API_URL}/api/users/addresses`, {
-                    withCredentials: true
-                });
+                const response = await api.get(`/users/addresses`);
                 setAddresses(response.data);
             } catch (error) {
                 console.error("Error fetching addresses", error);
@@ -48,14 +45,12 @@ const Profile = () => {
                 phoneNumber: user.phoneNumber || ''
             });
         }
-    }, [user, API_URL, openAddressModal]);
+    }, [user, openAddressModal]);
 
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.put(`${API_URL}/api/users/profile`, editData, {
-                withCredentials: true
-            });
+            const res = await api.put(`/users/profile`, editData);
             const updatedUser = { ...user, ...res.data };
             
             // If username changed, we need to alert the user that they might be logged out
@@ -95,9 +90,8 @@ const Profile = () => {
         const toastId = toast.loading("Uploading your photo...");
 
         try {
-            const res = await axios.post(`${API_URL}/api/users/profile/avatar`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-                withCredentials: true
+            const res = await api.post(`/users/profile/avatar`, formData, {
+                headers: { "Content-Type": "multipart/form-data" }
             });
             const updatedUser = { ...user, avatar: res.data.avatar };
             dispatch({ type: "LOGIN_USER", payload: updatedUser });
@@ -115,9 +109,7 @@ const Profile = () => {
         if (!window.confirm("Are you sure you want to request account deactivation? This action requires admin approval.")) return;
         
         try {
-            const res = await axios.post(`${API_URL}/api/users/deactivate/request`, {}, {
-                withCredentials: true
-            });
+            const res = await api.post(`/users/deactivate/request`, {});
             const updatedUser = { ...user, deactivationRequested: true };
             dispatch({ type: "LOGIN_USER", payload: updatedUser });
             localStorage.setItem("auth", JSON.stringify(updatedUser));
@@ -145,7 +137,7 @@ const Profile = () => {
                                     />
                                 ) : user?.avatar ? (
                                     <img 
-                                        src={user.avatar?.startsWith('http') ? user.avatar : `${API_URL}/images/${user.avatar}`} 
+                                        src={user.avatar?.startsWith('http') ? user.avatar : `${import.meta.env.VITE_BACK_END_URL}/images/${user.avatar}`} 
                                         alt="Avatar" 
                                         className="h-32 w-32 rounded-full object-cover border-4 border-transparent group-hover:border-purple-100 transition-all duration-300" 
                                     />

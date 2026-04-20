@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api/api';
 import { toast } from 'react-hot-toast';
 import { FaBox, FaCalendarAlt, FaCheckCircle, FaClock, FaChevronRight } from 'react-icons/fa';
 
 const UserOrders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const API_URL = import.meta.env.VITE_BACK_END_URL;
 
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await axios.get(`${API_URL}/api/users/orders`, {
-                    withCredentials: true
-                });
+                const response = await api.get(`/users/orders`);
                 setOrders(response.data.content);
             } catch (error) {
                 console.error("Error fetching orders", error);
@@ -24,7 +21,7 @@ const UserOrders = () => {
         };
 
         fetchOrders();
-    }, [API_URL]);
+    }, []);
 
     const getStatusStyle = (status) => {
         switch (status?.toLowerCase()) {
