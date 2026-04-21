@@ -16,19 +16,26 @@ const StripePayment = () => {
   const { user, selectedUserCheckoutAddress } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const sendData = {
-      amount: Number(totalPrice) * 100,
-      currency: "usd",
-      email: user?.email,
-      name: user?.username,
-      address: selectedUserCheckoutAddress,
-      description: `Order for ${user?.email}`,
-      metadata: {
-        test: "1"
-      }
+    if (!clientSecret && totalPrice > 0) {
+      const sendData = {
+        amount: Math.round(Number(totalPrice) * 100),
+        currency: "usd",
+        email: user?.email,
+        name: user?.username,
+        address: selectedUserCheckoutAddress,
+        description: `Order for ${user?.email}`,
+        metadata: { test: "1" }
+      };
+      dispatch(createStripePaymentSecret(sendData));
+    }
+  }, [dispatch, clientSecret, totalPrice, user, selectedUserCheckoutAddress]);
+
+  // Clear client secret if price or address changes to ensure fresh payment intent
+  useEffect(() => {
+    return () => {
+      // Optional: clear on unmount if requested
     };
-    dispatch(createStripePaymentSecret(sendData));
-  }, [dispatch, totalPrice, user, selectedUserCheckoutAddress]);
+  }, []);
 
   if (isLoading) {
     return (

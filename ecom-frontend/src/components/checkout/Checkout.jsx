@@ -60,29 +60,31 @@ const Checkout = () => {
             ))}
         </Stepper>
 
-        {isLoading ? (
-            <div className='lg:w-[80%] mx-auto py-5'>
-                <Skeleton />
-            </div>
-        ) : (
-            <div className='mt-5'>
-                {activeStep === 0 && <AddressInfo address={address} />}
-                {activeStep === 1 && <PaymentMethod />}
-                {activeStep === 2 && <OrderSummary 
-                                        totalPrice={totalPrice}
-                                        cart={cart}
-                                        address={selectedUserCheckoutAddress}
-                                        paymentMethod={paymentMethod}/>}
-                {activeStep === 3 && 
-                    <>
-                        {paymentMethod === "Stripe" ? (
-                            <StripePayment />
-                        ) : (
-                            <PaypalPayment />
-                        )}
-                    </>}
-            </div>
-        )}
+        <div className='mt-5'>
+            {isLoading && activeStep === 0 ? (
+                <div className='lg:w-[80%] mx-auto py-5'>
+                    <Skeleton />
+                </div>
+            ) : (
+                <>
+                    {activeStep === 0 && <AddressInfo address={address} />}
+                    {activeStep === 1 && <PaymentMethod />}
+                    {activeStep === 2 && <OrderSummary 
+                                            totalPrice={totalPrice}
+                                            cart={cart}
+                                            address={selectedUserCheckoutAddress}
+                                            paymentMethod={paymentMethod}/>}
+                    {activeStep === 3 && 
+                        <>
+                            {paymentMethod === "Stripe" ? (
+                                <StripePayment />
+                            ) : (
+                                <PaypalPayment />
+                            )}
+                        </>}
+                </>
+            )}
+        </div>
         
 
         <div
