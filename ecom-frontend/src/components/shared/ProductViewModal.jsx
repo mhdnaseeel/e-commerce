@@ -24,7 +24,7 @@ function ProductViewModal({open, setOpen, product, isAvailable}) {
                 {image && (
                     <div className='flex justify-center aspect-3/2'>
                     <img 
-                    src={image}
+                    src={image?.startsWith('http') ? image : `${import.meta.env.VITE_BACK_END_URL}/images/${image}`}
                     alt={productName} />
                     </div>
                 )}

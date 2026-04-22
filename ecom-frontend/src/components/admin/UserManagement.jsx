@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { deactivationTableColumns } from '../helper/tableColumn';
-import axios from 'axios';
+import api from '../../api/api';
 import toast from 'react-hot-toast';
 import Loader from '../shared/Loader';
 import { FaUsersSlash } from 'react-icons/fa';
@@ -10,14 +10,11 @@ const UserManagement = () => {
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({ pageNumber: 0, pageSize: 10, totalElements: 0 });
-    const API_URL = import.meta.env.VITE_BACK_END_URL;
 
     const fetchRequests = async (page = 0) => {
         setLoading(true);
         try {
-            const res = await axios.get(`${API_URL}/api/admin/users/deactivation-requests?pageNumber=${page}`, {
-                withCredentials: true
-            });
+            const res = await api.get(`/admin/users/deactivation-requests?pageNumber=${page}`);
             setRequests(res.data.content);
             setPagination({
                 pageNumber: res.data.pageNumber,
@@ -25,7 +22,12 @@ const UserManagement = () => {
                 totalElements: res.data.totalElements
             });
         } catch (error) {
-            toast.error("Failed to fetch deactivation requests");
+            console.error("Deactivation requests fetch error:", error?.response?.status, error?.response?.data);
+            if (error?.response?.status === 401) {
+                toast.error("Session expired. Please log in again.");
+            } else {
+                toast.error("Failed to fetch deactivation requests");
+            }
         } finally {
             setLoading(false);
         }
@@ -38,9 +40,7 @@ const UserManagement = () => {
     const handleAction = async (userId, approve) => {
         const actionText = approve ? "deactivated" : "rejected";
         try {
-            await axios.put(`${API_URL}/api/admin/users/${userId}/deactivate?approve=${approve}`, {}, {
-                withCredentials: true
-            });
+            await api.put(`/admin/users/${userId}/deactivate?approve=${approve}`, {});
             toast.success(`User successfully ${actionText}`);
             fetchRequests(pagination.pageNumber);
         } catch (error) {

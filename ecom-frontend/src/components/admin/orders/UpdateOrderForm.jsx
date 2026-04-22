@@ -1,4 +1,4 @@
-import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
+import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import React, { useState } from 'react'
 import { FaSpinner } from 'react-icons/fa';
 import Spinners from '../../shared/Spinners';
@@ -17,6 +17,7 @@ const ORDER_STATUSES = [
 
 const UpdateOrderForm = ({ setOpen, selectedId, selectedItem, loader, setLoader}) => {
     const [orderStatus, setOrderStatus] = useState(selectedItem?.status || 'Accepted');
+    const [trackingDetails, setTrackingDetails] = useState(selectedItem?.trackingDetails || '');
     const [error, setError] = useState("");
     const dispatch = useDispatch();
 
@@ -32,6 +33,7 @@ const UpdateOrderForm = ({ setOpen, selectedId, selectedItem, loader, setLoader}
         dispatch(updateOrderStatusFromDashboard(
             selectedId,
             orderStatus,
+            trackingDetails,
             toast,
             setLoader,
             isAdmin
@@ -64,6 +66,18 @@ const UpdateOrderForm = ({ setOpen, selectedId, selectedItem, loader, setLoader}
 
                 {error && <FormHelperText>{error}</FormHelperText>}
             </FormControl>
+
+            <TextField
+                fullWidth
+                multiline
+                rows={3}
+                variant='outlined'
+                label='Tracking Details'
+                placeholder='e.g. Shipped via FedEx, Tracking ID: 123456789'
+                value={trackingDetails}
+                onChange={(e) => setTrackingDetails(e.target.value)}
+                helperText='This information will be visible to the customer in "Track Your Order"'
+            />
 
             <div className='flex w-full justify-between items-center absolute bottom-14'>
                 <Button disabled={loader}

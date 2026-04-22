@@ -10,7 +10,7 @@ public interface OrderService {
 
     OrderResponse getAllOrders(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
-    OrderDTO updateOrder(Long orderId, String status);
+    OrderDTO updateOrder(Long orderId, String status, String trackingDetails);
 
     OrderResponse getAllSellerOrders(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 

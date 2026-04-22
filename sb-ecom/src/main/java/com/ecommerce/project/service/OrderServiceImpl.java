@@ -93,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
             orderItems.add(orderItem);
         }
 
-        orderItems = orderItemRepository.saveAll(orderItems);
+        List<OrderItem> savedOrderItems = orderItemRepository.saveAll(orderItems);
 
         cart.getCartItems().forEach(item -> {
             int quantity = item.getQuantity();
@@ -104,13 +104,18 @@ public class OrderServiceImpl implements OrderService {
 
             // Save product back to the database
             productRepository.save(product);
+        });
 
-            // Remove items from cart
+        // Delete items from cart after processing them to avoid ConcurrentModificationException
+        cart.getCartItems().forEach(item -> {
             cartService.deleteProductFromCart(cart.getCartId(), item.getProduct().getProductId());
         });
 
         OrderDTO orderDTO = modelMapper.map(savedOrder, OrderDTO.class);
-        orderItems.forEach(item -> orderDTO.getOrderItems().add(modelMapper.map(item, OrderItemDTO.class)));
+        if (orderDTO.getOrderItems() == null) {
+            orderDTO.setOrderItems(new ArrayList<>());
+        }
+        savedOrderItems.forEach(item -> orderDTO.getOrderItems().add(modelMapper.map(item, OrderItemDTO.class)));
 
         orderDTO.setAddressId(addressId);
 
@@ -139,10 +144,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO updateOrder(Long orderId, String status) {
+    public OrderDTO updateOrder(Long orderId, String status, String trackingDetails) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order","orderId",orderId));
         order.setOrderStatus(status);
+        if (trackingDetails != null) {
+            order.setTrackingDetails(trackingDetails);
+        }
         orderRepository.save(order);
         return modelMapper.map(order, OrderDTO.class);
     }

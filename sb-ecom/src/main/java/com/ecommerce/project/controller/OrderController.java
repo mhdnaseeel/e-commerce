@@ -83,14 +83,14 @@ public class OrderController {
     @PutMapping("/admin/orders/{orderId}/status")
     public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long orderId,
                                                       @RequestBody OrderStatusUpdateDto orderStatusUpdateDto) {
-        OrderDTO order = orderService.updateOrder(orderId, orderStatusUpdateDto.getStatus());
+        OrderDTO order = orderService.updateOrder(orderId, orderStatusUpdateDto.getStatus(), orderStatusUpdateDto.getTrackingDetails());
         return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
     }
 
     @PutMapping("/seller/orders/{orderId}/status")
     public ResponseEntity<OrderDTO> updateOrderStatusSeller(@PathVariable Long orderId,
                                                       @RequestBody OrderStatusUpdateDto orderStatusUpdateDto) {
-        OrderDTO order = orderService.updateOrder(orderId, orderStatusUpdateDto.getStatus());
+        OrderDTO order = orderService.updateOrder(orderId, orderStatusUpdateDto.getStatus(), orderStatusUpdateDto.getTrackingDetails());
         return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
     }
 

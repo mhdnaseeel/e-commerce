@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class OrderStatusUpdateDto {
     private String status;
+    private String trackingDetails;
 }

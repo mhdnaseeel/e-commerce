@@ -222,7 +222,7 @@ export const clearCheckoutAddress = () => {
 export const getUserAddresses = () => async (dispatch, getState) => {
     try {
         dispatch({ type: "IS_FETCHING" });
-        const { data } = await api.get(`/addresses`);
+        const { data } = await api.get(`/users/addresses`);
         dispatch({type: "USER_ADDRESS", payload: data});
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
@@ -369,11 +369,11 @@ export const getOrdersForDashboard = (queryString, isAdmin) => async (dispatch) 
 
 
 export const updateOrderStatusFromDashboard =
-     (orderId, orderStatus, toast, setLoader, isAdmin) => async (dispatch, getState) => {
+     (orderId, orderStatus, trackingDetails, toast, setLoader, isAdmin) => async (dispatch, getState) => {
     try {
         setLoader(true);
         const endpoint = isAdmin ? "/admin/orders/" : "/seller/orders/";
-        const { data } = await api.put(`${endpoint}${orderId}/status`, { status: orderStatus});
+        const { data } = await api.put(`${endpoint}${orderId}/status`, { status: orderStatus, trackingDetails: trackingDetails});
         toast.success(data.message || "Order updated successfully");
         await dispatch(getOrdersForDashboard());
     } catch (error) {

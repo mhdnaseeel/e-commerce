@@ -28,14 +28,19 @@ public class StripeServiceImpl implements StripeService {
 
     @Override
     public PaymentIntent paymentIntent(StripePaymentDto stripePaymentDto) throws StripeException {
+        System.out.println("Step 1: Searching for customer with email: " + stripePaymentDto.getEmail());
         Customer customer;
         // Retrieve and check if customer exist
         CustomerSearchParams searchParams =
                 CustomerSearchParams.builder()
                         .setQuery("email:'" + stripePaymentDto.getEmail() + "'")
                         .build();
+        
         CustomerSearchResult customers = Customer.search(searchParams);
+        System.out.println("Step 2: Customer search completed. Found: " + customers.getData().size());
+
         if (customers.getData().isEmpty()) {
+            System.out.println("Step 3a: Creating new customer...");
             // Create new customer
             CustomerCreateParams customerParams = CustomerCreateParams.builder()
                     .setEmail(stripePaymentDto.getEmail())
@@ -52,11 +57,15 @@ public class StripeServiceImpl implements StripeService {
                     .build();
 
             customer = Customer.create(customerParams);
+            System.out.println("Step 4a: Customer created with ID: " + customer.getId());
         } else {
+            System.out.println("Step 3b: Using existing customer...");
             // Fetch the customer that exist
             customer = customers.getData().get(0);
+            System.out.println("Step 4b: Found customer ID: " + customer.getId());
         }
 
+        System.out.println("Step 5: Creating PaymentIntent...");
         PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()
                         .setAmount(stripePaymentDto.getAmount())
@@ -70,6 +79,15 @@ public class StripeServiceImpl implements StripeService {
                         )
                         .build();
 
-        return PaymentIntent.create(params);
+        try {
+            PaymentIntent intent = PaymentIntent.create(params);
+            System.out.println("Step 6: PaymentIntent created successfully with ID: " + intent.getId());
+            return intent;
+        } catch (StripeException e) {
+            System.err.println("CRITICAL: Stripe PaymentIntent creation failed!");
+            System.err.println("Error Message: " + e.getMessage());
+            System.err.println("Stripe Code: " + e.getCode());
+            throw e;
+        }
     }
 }

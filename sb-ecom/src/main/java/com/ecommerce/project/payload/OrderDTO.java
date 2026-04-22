@@ -13,10 +13,12 @@ import java.util.List;
 public class OrderDTO {
     private Long orderId;
     private String email;
-    private List<OrderItemDTO> orderItems;
+    private List<OrderItemDTO> orderItems = new java.util.ArrayList<>();
     private LocalDate orderDate;
     private PaymentDTO payment;
     private Double totalAmount;
     private String orderStatus;
+    private String trackingDetails;
     private Long addressId;
+    private AddressDTO address;
 }

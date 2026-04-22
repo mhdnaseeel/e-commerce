@@ -37,23 +37,54 @@ const StripePayment = () => {
     };
   }, []);
 
+  const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+
+  if (!stripePublishableKey) {
+    return (
+      <div className='max-w-lg mx-auto mt-10'>
+        <Alert severity="error">
+          <AlertTitle>Stripe Configuration Error</AlertTitle>
+          Stripe Publishable Key is missing! Please set <strong>VITE_STRIPE_PUBLISHABLE_KEY</strong> in your environment variables.
+        </Alert>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
-      <div className='max-w-lg mx-auto'>
-        <Skeleton />
+      <div className='max-w-lg mx-auto mt-10'>
+        <div className='flex flex-col items-center gap-4'>
+           <Skeleton variant="rectangular" width="100%" height={200} />
+           <p className='text-gray-500 animate-pulse'>Initializing secure payment gateway...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (errorMessage) {
+    return (
+      <div className='max-w-lg mx-auto mt-10'>
+        <Alert severity="error">
+          <AlertTitle>Payment Error</AlertTitle>
+          {errorMessage}. Please try refreshing the page or contact support.
+        </Alert>
       </div>
     )
   }
 
 
   return (
-    <>
-      {clientSecret && (
+    <div className='min-h-[400px]'>
+      {clientSecret ? (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
           <PaymentForm clientSecret={clientSecret} totalPrice={totalPrice} />
         </Elements>
+      ) : (
+        <div className='max-w-lg mx-auto mt-10 text-center text-gray-500'>
+           {!isLoading && !errorMessage && <p>Preparing your order...</p>}
+        </div>
       )}
-    </>
+    </div>
   )
 }
 

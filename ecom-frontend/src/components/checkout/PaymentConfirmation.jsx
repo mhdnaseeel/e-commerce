@@ -21,24 +21,33 @@ const PaymentConfirmation = () => {
         : [];
 
     useEffect(() => {
+        console.log("PaymentConfirmation mounted/updated. Params:", { paymentIntent, clientSecret, redirectStatus });
+        console.log("Current Cart:", cart);
+        
         if (paymentIntent &&
             clientSecret &&
             redirectStatus &&
             cart &&
             cart?.length > 0
         ) { 
-            console.log(selectedUserCheckoutAddress);
+            console.log("Starting Stripe payment confirmation with address:", selectedUserCheckoutAddress);
             const sendData = {
-                addressId: selectedUserCheckoutAddress.addressId,
+                addressId: selectedUserCheckoutAddress?.addressId,
                 pgName: "Stripe",
                 pgPaymentId: paymentIntent,
                 pgStatus: "succeeded",
                 pgResponseMessage: "Payment successful"
               };
-              console.log(sendData);
             dispatch(stripePaymentConfirmation(sendData, setErrorMessage, setLoading, toast));
+        } else {
+            if (!paymentIntent || !clientSecret || !redirectStatus) {
+                console.warn("PaymentIntent params missing from URL");
+            }
+            if (!cart || cart.length === 0) {
+                console.warn("Cart is empty - confirmation might have already occurred or state lost");
+            }
         }
-    }, [paymentIntent, clientSecret, redirectStatus, cart]);
+    }, [paymentIntent, clientSecret, redirectStatus, cart, dispatch, selectedUserCheckoutAddress]);
 
   return (
     <div className='min-h-screen flex items-center justify-center'>
