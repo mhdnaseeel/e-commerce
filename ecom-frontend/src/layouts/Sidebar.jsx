@@ -2,7 +2,7 @@ import React from 'react'
 import { FaTachometerAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom'
-import { adminNavigation, sellerNavigation } from '../../utils';
+import { adminNavigation, sellerNavigation } from '../utils/index';
 import classNames from 'classnames';
 
 const Sidebar = ({isProfileLayout = false}) => {

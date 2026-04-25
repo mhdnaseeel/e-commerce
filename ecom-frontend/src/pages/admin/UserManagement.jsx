@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { deactivationTableColumns } from '../helper/tableColumn';
+import { deactivationTableColumns } from '../../components/helper/tableColumn';
 import api from '../../api/api';
 import toast from 'react-hot-toast';
-import Loader from '../shared/Loader';
+import Loader from '../../components/shared/Loader';
 import { FaUsersSlash } from 'react-icons/fa';
 
 const UserManagement = () => {

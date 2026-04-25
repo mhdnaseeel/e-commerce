@@ -3,7 +3,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import ProductViewModal from "./ProductViewModal";
 import truncateText from "../../utils/truncateText";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../store/actions";
+import { addToCart } from "../../store/actions/index";
 import toast from "react-hot-toast";
 
 const ProductCard = ({

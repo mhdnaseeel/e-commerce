@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import HeroBanner from "./HeroBanner";
+import HeroBanner from "../components/home/HeroBanner";
 import { useEffect } from "react";
-import { fetchProducts } from "../../store/actions";
-import ProductCard from "../shared/ProductCard";
-import Loader from "../shared/Loader";
+import { fetchProducts } from "../store/actions/index";
+import ProductCard from "../components/shared/ProductCard";
+import Loader from "../components/shared/Loader";
 import { FaExclamationTriangle } from "react-icons/fa";
 
 const Home = () => {

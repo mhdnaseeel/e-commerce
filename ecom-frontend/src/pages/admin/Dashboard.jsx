@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
-import DashboardOverview from './DashboardOverview'
+import DashboardOverview from '../../components/admin/dashboard/DashboardOverview'
 import { FaBoxOpen, FaDollarSign, FaShoppingCart } from 'react-icons/fa';
 import { MdAttachMoney } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import { analyticsAction } from '../../../store/actions';
-import Loader from '../../shared/Loader';
-import ErrorPage from '../../shared/ErrorPage';
+import { analyticsAction } from '../../store/actions/index';
+import Loader from '../../components/shared/Loader';
+import ErrorPage from '../ErrorPage';
 
 const Dashboard = () => {
   const dispatch = useDispatch();

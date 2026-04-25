@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import api from '../../api/api';
 import { toast } from 'react-hot-toast';
 import { FaBox, FaCalendarAlt, FaCheckCircle, FaClock, FaChevronRight } from 'react-icons/fa';
-import TrackingModal from './TrackingModal';
-import InvoiceView from './InvoiceView';
-import ProductViewModal from '../shared/ProductViewModal';
+import TrackingModal from '../../components/profile/TrackingModal';
+import InvoiceView from '../../components/profile/InvoiceView';
+import ProductViewModal from '../../components/shared/ProductViewModal';
 
 const UserOrders = () => {
     const [orders, setOrders] = useState([]);

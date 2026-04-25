@@ -1,15 +1,15 @@
 import { Button, Step, StepLabel, Stepper } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import AddressInfo from './AddressInfo';
+import AddressInfo from '../../components/checkout/AddressInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserAddresses } from '../../store/actions';
+import { getUserAddresses } from '../../store/actions/index';
 import toast from 'react-hot-toast';
-import Skeleton from '../shared/Skeleton';
-import ErrorPage from '../shared/ErrorPage';
-import PaymentMethod from './PaymentMethod';
-import OrderSummary from './OrderSummary';
-import StripePayment from './StripePayment';
-import PaypalPayment from './PaypalPayment';
+import Skeleton from '../../components/shared/Skeleton';
+import ErrorPage from '../ErrorPage';
+import PaymentMethod from '../../components/checkout/PaymentMethod';
+import OrderSummary from '../../components/checkout/OrderSummary';
+import StripePayment from '../../components/checkout/StripePayment';
+import PaypalPayment from '../../components/checkout/PaypalPayment';
 
 const Checkout = () => {
     const [activeStep, setActiveStep] = useState(0);

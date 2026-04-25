@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import { MdAddShoppingCart } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import Loader from '../../shared/Loader';
+import Loader from '../../components/shared/Loader';
 import { FaBoxOpen } from 'react-icons/fa';
 import { DataGrid } from '@mui/x-data-grid';
-import { adminProductTableColumn } from '../../helper/tableColumn';
-import { useDashboardProductFilter } from '../../../hooks/useProductFilter';
-import Modal from '../../shared/Modal';
-import AddProductForm from './AddProductForm';
-import DeleteModal from '../../shared/DeleteModal';
-import { deleteProduct } from '../../../store/actions';
+import { adminProductTableColumn } from '../../components/helper/tableColumn';
+import { useDashboardProductFilter } from '../../hooks/useProductFilter';
+import Modal from '../../components/shared/Modal';
+import AddProductForm from '../../components/admin/products/AddProductForm';
+import DeleteModal from '../../components/shared/DeleteModal';
+import { deleteProduct } from '../../store/actions/index';
 import toast from 'react-hot-toast';
-import ImageUploadForm from './ImageUploadForm';
-import ProductViewModal from '../../shared/ProductViewModal';
+import ImageUploadForm from '../../components/admin/products/ImageUploadForm';
+import ProductViewModal from '../../components/shared/ProductViewModal';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const AdminProducts = () => {

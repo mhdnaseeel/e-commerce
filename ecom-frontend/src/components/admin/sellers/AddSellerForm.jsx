@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { addNewDashboardSeller } from "../../../store/actions";
+import { addNewDashboardSeller } from "../../../store/actions/index";
 import InputField from "../../shared/InputField";
 import Spinners from "../../shared/Spinners";
 

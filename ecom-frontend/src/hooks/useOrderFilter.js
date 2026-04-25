@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { getOrdersForDashboard } from "../store/actions";
+import { getOrdersForDashboard } from "../store/actions/index";
 
 const useOrderFilter = () => {
     const [searchParams] = useSearchParams();

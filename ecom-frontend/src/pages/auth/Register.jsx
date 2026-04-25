@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { FaUserPlus } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
-import InputField from '../shared/InputField';
+import InputField from '../../components/shared/InputField';
 import { useDispatch } from 'react-redux';
-import { registerNewUser } from '../../store/actions';
+import { registerNewUser } from '../../store/actions/index';
 import toast from 'react-hot-toast';
-import Spinners from '../shared/Spinners';
+import Spinners from '../../components/shared/Spinners';
 
 const Register = () => {
     const navigate = useNavigate();

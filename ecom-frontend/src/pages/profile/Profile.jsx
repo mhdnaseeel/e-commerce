@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import api from '../../api/api';
 import { FaUser, FaEnvelope, FaShieldAlt, FaMapMarkerAlt, FaPlus, FaEdit, FaCamera } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
-import AddressInfoModal from '../checkout/AddressInfoModal';
-import AddAddressForm from '../checkout/AddAddressForm';
-import ChangePasswordModal from './ChangePasswordModal';
-import EmailPreferencesModal from './EmailPreferencesModal';
+import AddressInfoModal from '../../components/checkout/AddressInfoModal';
+import AddAddressForm from '../../components/checkout/AddAddressForm';
+import ChangePasswordModal from '../../components/profile/ChangePasswordModal';
+import EmailPreferencesModal from '../../components/profile/EmailPreferencesModal';
 
 const Profile = () => {
     const { user } = useSelector((state) => state.auth);

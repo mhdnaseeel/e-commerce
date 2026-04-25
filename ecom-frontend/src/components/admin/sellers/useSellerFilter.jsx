@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import { getAllSellersDashboard } from "../../../store/actions";
+import { getAllSellersDashboard } from "../../../store/actions/index";
 
 const useSellerFilter = () => {
   const [searchParams] = useSearchParams(); // Access search params from the URL

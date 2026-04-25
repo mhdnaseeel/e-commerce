@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { FaSpinner } from 'react-icons/fa';
 import Spinners from '../../shared/Spinners';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateOrderStatusFromDashboard } from '../../../store/actions';
+import { updateOrderStatusFromDashboard } from '../../../store/actions/index';
 import toast from 'react-hot-toast';
 
 const ORDER_STATUSES = [

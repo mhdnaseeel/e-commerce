@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import AddressList from './AddressList';
 import { DeleteModal } from './DeleteModal';
 import toast from 'react-hot-toast';
-import { deleteUserAddress } from '../../store/actions';
+import { deleteUserAddress } from '../../store/actions/index';
 
 const AddressInfo = ({ address }) => {
     const [openAddressModal, setOpenAddressModal] = useState(false);

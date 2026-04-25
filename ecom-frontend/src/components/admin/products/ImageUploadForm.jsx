@@ -4,7 +4,7 @@ import Spinners from '../../shared/Spinners';
 import { Button } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateProductImageFromDashboard } from '../../../store/actions';
+import { updateProductImageFromDashboard } from '../../../store/actions/index';
 
 const ImageUploadForm = ({ setOpen, product }) => {
     const [loader, setLoader] = useState(false);

@@ -5,14 +5,14 @@ import { DataGrid } from "@mui/x-data-grid";
 import { FaFolderOpen, FaThList } from "react-icons/fa";
 import toast from "react-hot-toast";
 
-import Modal from "../../shared/Modal";
-import AddCategoryForm from "./AddCategoryForm";
-import Loader from "../../shared/Loader";
-import { DeleteModal } from "../../../components/shared/DeleteModal";
-import useCategoryFilter from "../../../hooks/useCategoryFilter";
-import ErrorPage from "../../shared/ErrorPage";
-import { deleteCategoryDashboardAction } from "../../../store/actions";
-import { categoryTableColumns } from "../../helper/tableColumn";
+import Modal from "../../components/shared/Modal";
+import AddCategoryForm from "../../components/admin/categories/AddCategoryForm";
+import Loader from "../../components/shared/Loader";
+import { DeleteModal } from "../../components/shared/DeleteModal";
+import useCategoryFilter from "../../hooks/useCategoryFilter";
+import ErrorPage from "../ErrorPage";
+import { deleteCategoryDashboardAction } from "../../store/actions/index";
+import { categoryTableColumns } from "../../components/helper/tableColumn";
 
 const Category = () => {
   const [searchParams] = useSearchParams();

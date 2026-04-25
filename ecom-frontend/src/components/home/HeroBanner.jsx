@@ -10,7 +10,7 @@ import 'swiper/css/autoplay';
 import 'swiper/css';
 import { Autoplay, Pagination, EffectFade, Navigation } from 'swiper/modules';
 
-import { bannerLists } from '../../utils';
+import { bannerLists } from '../../utils/index';
 import { Link } from 'react-router-dom';
 
 const colors = ["bg-banner-color1", "bg-banner-color2", "bg-banner-color3"];

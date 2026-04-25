@@ -4,7 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PaymentForm from './PaymentForm';
-import { createStripePaymentSecret } from '../../store/actions';
+import { createStripePaymentSecret } from '../../store/actions/index';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 

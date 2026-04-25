@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FaCheckCircle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom'
-import { stripePaymentConfirmation } from '../../store/actions';
+import { stripePaymentConfirmation } from '../../store/actions/index';
 import toast from 'react-hot-toast';
 
 const PaymentConfirmation = () => {
