@@ -90,9 +90,7 @@ const Profile = () => {
         const toastId = toast.loading("Uploading your photo...");
 
         try {
-            const res = await api.post(`/users/profile/avatar`, formData, {
-                headers: { "Content-Type": "multipart/form-data" }
-            });
+            const res = await api.post(`/users/profile/avatar`, formData);
             const updatedUser = { ...user, avatar: res.data.avatar };
             dispatch({ type: "LOGIN_USER", payload: updatedUser });
             localStorage.setItem("auth", JSON.stringify(updatedUser));
